@@ -32,4 +32,32 @@ show()
 count()
 collect()
 
-6.
+6. What is shuffle? (VERY IMPORTANT)
+Data movement across nodes
+Happens in:
+join , groupBy , distinct
+Problem: Expensive operation
+
+7.What is caching?
+df.cache()
+Stores data in memory for reuse
+Use when: Same DataFrame used multiple times
+
+8.What is broadcast join?
+Used when one table is small:
+from pyspark.sql.functions import broadcast
+df.join(broadcast(df_small), "id")
+Avoids shuffle
+
+9.What is Catalyst Optimizer?
+Query optimizer in Spark
+Automatically: Reorders joins and Pushes filters down
+
+10.What is wide vs narrow transformation?
+Narrow: No shuffle (fast)
+Example: map()
+
+Wide: Requires shuffle (slow)
+Example: groupBy()
+
+11.
