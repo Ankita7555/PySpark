@@ -1,0 +1,35 @@
+1. What is PySpark?
+PySpark is the Python API for Apache Spark, used for distributed data processing across clusters. It allows handling large-scale data using parallel computation.
+
+2. What are the core components of Spark?
+🔹 Driver
+  Controls execution  
+  Creates SparkSession
+🔹 Executor
+  Runs tasks on worker nodes
+🔹 Cluster Manager
+  Allocates resources (YARN, Kubernetes)
+
+3. What is SparkSession?
+Entry point to PySpark
+synatx:
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("app").getOrCreate()
+
+4. What is lazy evaluation?
+Transformations are not executed immediately
+df.filter(...).select(...)
+Execution happens only on:
+df.show()   # action
+
+5. What are transformations and actions?
+🔹 Transformations (lazy)
+filter()
+select()
+join()
+🔹 Actions (trigger execution)
+show()
+count()
+collect()
+
+6.
