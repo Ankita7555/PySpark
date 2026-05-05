@@ -1,5 +1,13 @@
+interview Question - https://www.interviewbit.com/pyspark-interview-questions/
+
 1. What is PySpark?
 PySpark is the Python API for Apache Spark, used for distributed data processing across clusters. It allows handling large-scale data using parallel computation.
+
+> What is PySpark SparkContext?
+PySpark SparkContext is an initial entry point of the spark functionality. It also represents Spark Cluster Connection and can be used for creating the Spark RDDs (Resilient Distributed Datasets) and broadcasting the variables on the cluster.
+
+> What is PySpark SQL?
+PySpark SQL is the most popular PySpark module that is used to process structured columnar data. Once a DataFrame is created, we can interact with data using the SQL syntax. Spark SQL is used for bringing native raw SQL queries on Spark by using select, where, group by, join, union etc. For using PySpark SQL, the first step is to create a temporary table on DataFrame by using createOrReplaceTempView() function. Post creation, the table is accessible throughout SparkSession by using sql() method. When the SparkSession gets terminated, the temporary table will be dropped.
 
 2. What are the core components of Spark?
 🔹 Driver
@@ -60,4 +68,113 @@ Example: map()
 Wide: Requires shuffle (slow)
 Example: groupBy()
 
-11.
+11.What causes slow Spark jobs?
+Shuffle operations
+Skewed data
+Too many partitions
+Large joins
+Not using broadcast
+
+12.JOIN TYPES :
+
+| Join Type | Result                  |
+| --------- | ----------------------- |
+| inner     | matching only           |
+| left      | all left + matches      |
+| right     | all right + matches     |
+| outer     | all rows                |
+| left_semi | only matching left rows |
+| left_anti | non-matching left rows  |
+
+13.What is coalesce() in PySpark?
+coalesce() is used to reduce the number of partitions in a DataFrame without causing a full shuffle.
+syntax : df.coalesce(num_partitions)
+
+| Feature             | coalesce()      | repartition() |
+| ------------------- | --------------- | ------------- |
+| Shuffle             | ❌ No            | ✅ Yes        |
+| Increase partitions | ❌ No            | ✅ Yes        |
+| Performance         | Faster          | Slower        |
+| Data distribution   | Uneven possible | Even          |
+
+
+14.PySpark Window Functions -
+
+1. Import & Setup :
+from pyspark.sql.window import Window
+from pyspark.sql.functions import *
+
+2.Create Window Specification :
+window_spec = Window.partitionBy('col1').orderBy('col2')
+
+3.Ranking Functions :
+Row Number : df.withColumn("row_num", row_number().over(window_spec))
+Rank : df.withColumn("rank", rank().over(window_spec))
+Dense Rank : df.withColumn("dense_rank", dense_rank().over(window_spec))
+
+4. Lead & Lag :
+df.withColumn("prev", lag("salary", 1).over(window_spec))
+df.withColumn("next", lead("salary", 1).over(window_spec))
+
+15 . What happens internally when you run a Spark job?
+Steps:
+Code → converted into logical plan
+Optimized by Catalyst Optimizer
+Converted into physical plan
+Executed as DAG (Directed Acyclic Graph)
+
+16 . What is lazy evaluation and why is it useful?
+Transformations are not executed immediately
+Execution happens only when an action is called
+✔ Benefits:
+Optimization
+Reduced computation
+Efficient execution
+
+17.What is the difference between cache() and persist()?
+| cache()     | persist()     |
+| ----------- | ------------- |
+| Memory only | Memory + disk |
+| Default     | Flexible      |
+
+18. What is Tungsten Engine?
+Spark execution engine
+Improves: Memory management
+CPU efficiency
+Binary processing
+
+19.What causes Spark job failure?
+Memory issues
+Data skew
+Shuffle overload
+Executor failure
+
+20. What is PySpark UDF?
+UDF stands for User Defined Functions. In PySpark, UDF can be created by creating a python function and wrapping it with PySpark SQL’s udf() method and using it on the DataFrame or SQL. These are generally created when we do not have the functionalities supported in PySpark’s library and we have to use our own logic on the data. UDFs can be reused on any number of SQL expressions or DataFrames.
+
+21. What do you understand about PySpark DataFrames?
+PySpark DataFrame is a distributed collection of well-organized data that is equivalent to tables of the relational databases and are placed into named columns. PySpark DataFrame has better optimisation when compared to R or python. These can be created from different sources like Hive Tables, Structured Data Files, existing RDDs, external databases etc .
+The data in the PySpark DataFrame is distributed across different machines in the cluster and the operations performed on this would be run parallelly on all the machines. These can handle a large collection of structured or semi-structured data of a range of petabytes.
+
+22. What are the advantages of PySpark RDD?
+PySpark RDDs have the following advantages:
+ > In-Memory Processing: PySpark’s RDD helps in loading data from the disk to the memory. The RDDs can even be persisted in the memory for reusing the computations.
+ > Immutability: The RDDs are immutable which means that once created, they cannot be modified. While applying any transformation operations on the RDDs, a new RDD would be created.
+ > Fault Tolerance: The RDDs are fault-tolerant. This means that whenever an operation fails, the data gets automatically reloaded from other available partitions. This results in seamless execution of the PySpark applications.
+ > Lazy Evolution: The PySpark transformation operations are not performed as soon as they are encountered. The operations would be stored in the DAG and are evaluated once it finds the first RDD action.
+ > Partitioning: Whenever RDD is created from any data, the elements in the RDD are partitioned to the cores available by default.
+ 
+23. What are PySpark serializers?
+The serialization process is used to conduct performance tuning on Spark. The data sent or received over the network to the disk or memory should be persisted. PySpark supports serializers for this purpose. It supports two types of serializers, they are:
+
+> PickleSerializer: This serializes objects using Python’s PickleSerializer (class pyspark.PickleSerializer). This supports almost every Python object.
+> MarshalSerializer: This performs serialization of objects. We can use it by using class pyspark.MarshalSerializer. This serializer is faster than the PickleSerializer but it supports only limited types.
+
+
+
+
+
+
+
+
+
