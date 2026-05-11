@@ -171,6 +171,18 @@ The serialization process is used to conduct performance tuning on Spark. The da
 > MarshalSerializer: This performs serialization of objects. We can use it by using class pyspark.MarshalSerializer. This serializer is faster than the PickleSerializer but it supports only limited types.
 
 
+24.
+| Feature           | RDD       | DataFrame  |
+| ----------------- | --------- | ---------- |
+| Level             | Low-level | High-level |
+| Schema            | ❌ No      | ✅ Yes      |
+| Optimization      | ❌ No      | ✅ Catalyst |
+| Performance       | Slower    | Faster     |
+| Type Safety       | Yes       | Limited    |
+| Ease of Use       | Harder    | Easier     |
+| Memory Usage      | More      | Less       |
+| Structured Data   | Poor      | Excellent  |
+| Unstructured Data | Good      | Limited    |
 
 
 
