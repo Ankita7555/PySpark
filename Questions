@@ -265,3 +265,14 @@ USe of AQE :
 | Shuffle partition coalescing | Less overhead        |
 | Skew optimization            | Faster skewed joins  |
 
+31. Driver v/s Executor 
+| Feature              | Driver               | Executor       |
+| -------------------- | -------------------- | -------------- |
+| Role                 | Controls application | Processes data |
+| Runs where           | Driver node          | Worker nodes   |
+| Responsibility       | Scheduling           | Execution      |
+| Creates DAG          | ✅ Yes                | ❌ No           |
+| Executes tasks       | ❌ No                 | ✅ Yes          |
+| Stores metadata      | ✅ Yes                | ❌ No           |
+| Handles shuffle data | ❌ Mostly no          | ✅ Yes          |
+| Caching              | ❌ No                 | ✅ Yes          |
