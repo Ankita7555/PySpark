@@ -184,9 +184,84 @@ The serialization process is used to conduct performance tuning on Spark. The da
 | Structured Data   | Poor      | Excellent  |
 | Unstructured Data | Good      | Limited    |
 
+| Feature        | RDD | DataFrame |
+| -------------- | --- | --------- |
+| Fault tolerant | ✅   | ✅         |
+| Uses lineage   | ✅   | ✅         |
+| Optimized      | ❌   | ✅         |
 
 
 
+25.
+| Cluster Manager | Description                     | Common Use Case              |
+| --------------- | ------------------------------- | ---------------------------- |
+| Local Mode      | Runs on single machine          | Development/testing          |
+| Standalone      | Spark’s native cluster manager  | Small Spark clusters         |
+| YARN            | Hadoop resource manager         | Enterprise Hadoop ecosystems |
+| Kubernetes      | Container orchestration         | Cloud-native deployments     |
+| Mesos           | General-purpose cluster manager | Rare today                   |
 
 
+
+| Type       | Identifier |
+| ---------- | ---------- |
+| Local      | `local[*]` |
+| Standalone | `spark://` |
+| YARN       | `yarn`     |
+| Kubernetes | `k8s://`   |
+
+26.
+
+Serialization in PySpark is the process of converting objects into byte streams for distributed processing and network transfer. Spark mainly supports Java Serializer and Kryo Serializer. Kryo is preferred in production because it is faster and more memory efficient, reducing shuffle and network overhead.
+
+| Serializer        | Layer  | Speed    | Flexibility |
+| ----------------- | ------ | -------- | ----------- |
+| JavaSerializer    | JVM    | Moderate | High        |
+| KryoSerializer    | JVM    | Fast     | Medium      |
+| PickleSerializer  | Python | Moderate | Very High   |
+| MarshalSerializer | Python | Faster   | Limited     |
+
+In PySpark, serialization happens at both Python and JVM levels. JavaSerializer and KryoSerializer are JVM-side serializers used by Spark internally, while PickleSerializer and MarshalSerializer are Python-side serializers used for transferring Python objects and functions between Python processes and the JVM. PickleSerializer is commonly used because it supports complex Python objects, whereas MarshalSerializer is faster but limited in supported types.
+
+Real-Time Flow in PySpark - 
+Python Code
+   ↓
+PickleSerializer
+   ↓
+JVM Spark Engine
+   ↓
+Kryo/Java Serializer
+   ↓
+Executors
+
+27. how pyspark decide join type if not mentioned ?
+| Factor         | Purpose                    |
+| -------------- | -------------------------- |
+| Table size     | Can broadcast small table? |
+| Join condition | Equality join or not       |
+| Statistics     | Cost optimization          |
+| Memory         | Broadcast feasibility      |
+| Configurations | Threshold settings         |
+
+Spark internally chooses the join execution strategy using Catalyst Optimizer based on table size, join conditions, statistics, and configurations. Small tables typically use Broadcast Hash Join to avoid shuffle, while large-table joins usually use Sort Merge Join
+| Scenario            | Spark Usually Chooses |
+| ------------------- | --------------------- |
+| Small + Large table | BroadcastHashJoin     |
+| Large + Large table | SortMergeJoin         |
+| No join condition   | Cartesian Join        |
+
+30.What is AQE in PySpark? - Adaptive Query Execution
+🔹 Definition
+AQE allows Spark to: optimize query execution dynamically at runtime instead of relying only on the initial execution plan.
+Spark created:
+one fixed execution plan
+before job execution
+Problem:
+❌ Spark estimates may be wrong.
+USe of AQE :
+| Feature                      | Benefit              |
+| ---------------------------- | -------------------- |
+| Dynamic join switching       | Better join strategy |
+| Shuffle partition coalescing | Less overhead        |
+| Skew optimization            | Faster skewed joins  |
 
