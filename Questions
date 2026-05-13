@@ -276,3 +276,51 @@ USe of AQE :
 | Stores metadata      | ✅ Yes                | ❌ No           |
 | Handles shuffle data | ❌ Mostly no          | ✅ Yes          |
 | Caching              | ❌ No                 | ✅ Yes          |
+
+
+32. narrow v/s wide trasformation :
+| Narrow                    | Wide                   |
+| ------------------------- | ---------------------- |
+| No shuffle                | Shuffle required       |
+| Faster                    | Slower                 |
+| Same partition processing | Data redistribution    |
+| No stage break usually    | Creates stage boundary |
+
+33. python v/s pandas udf in pyspark 
+
+| Feature       | Python UDF | Pandas UDF |
+| ------------- | ---------- | ---------- |
+| Processing    | Row-wise   | Batch-wise |
+| Speed         | Slower     | Faster     |
+| Arrow         | ❌ No       | ✅ Yes      |
+| Serialization | High       | Reduced    |
+| Optimization  | Poor       | Better     |
+
+34. pyspark - Full Internal Flow Diagram
+
+User Code
+   ↓
+Driver
+   ↓
+Logical Plan
+   ↓
+Catalyst Optimizer
+   ↓
+Physical Plan
+   ↓
+DAG Scheduler
+   ↓
+Stages
+   ↓
+Task Scheduler
+   ↓
+Tasks
+   ↓
+Executors
+   ↓
+Output
+
+35. stage Boundries -
+Stage boundary is the point where Spark creates a new stage.
+Usually caused by:
+✅ shuffle / wide transformations
